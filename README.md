@@ -147,8 +147,9 @@ shape described above:
 ```text
 src/conversation_prosody_pipeline/
   baseline.py   Conversation-local running baselines
+  extractors.py Extractor interfaces and dependency-free mock extractor
   pipeline.py   Turn-by-turn metadata builder
-  types.py      Typed feature and metadata objects
+  types.py      Typed turn, feature, and metadata objects
 ```
 
 The current metadata schema includes a serialized `schema_version` and optional
@@ -159,6 +160,12 @@ Run the minimal example:
 
 ```bash
 scripts/venv run python examples/minimal_turn.py
+```
+
+Run the mock extractor example:
+
+```bash
+scripts/venv run python examples/mock_extractor.py
 ```
 
 Run tests:
@@ -188,6 +195,7 @@ test: unittest
 See also:
 
 * [Development guide](DEVELOPMENT.md)
+* [Architecture](docs/architecture.md)
 * [Metadata schema](docs/metadata-schema.md)
 * [Roadmap](docs/roadmap.md)
 

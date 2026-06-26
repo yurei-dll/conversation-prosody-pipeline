@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 
@@ -59,6 +59,19 @@ class TurnTiming:
             "end_ms": self.end_ms,
             "duration_ms": self.duration_ms,
         }
+
+
+@dataclass(frozen=True)
+class RawTurn:
+    """Generic upstream input for one conversational turn.
+
+    This intentionally avoids audio buffers and speech-engine-specific objects. Adapters
+    should translate external formats into this pipeline-native shape.
+    """
+
+    transcript: str
+    timing: TurnTiming | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
