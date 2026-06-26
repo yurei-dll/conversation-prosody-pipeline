@@ -121,6 +121,55 @@ The pipeline intentionally avoids prescribing an interpretation.
 
 ---
 
+## Groundwork
+
+This repository now includes a small Python core for experimenting with the metadata
+shape described above:
+
+```text
+src/conversation_prosody_pipeline/
+  baseline.py   Conversation-local running baselines
+  pipeline.py   Turn-by-turn metadata builder
+  types.py      Typed feature and metadata objects
+```
+
+Run the minimal example:
+
+```bash
+scripts/venv run python examples/minimal_turn.py
+```
+
+Run tests:
+
+```bash
+scripts/venv run python -m unittest discover -s tests
+```
+
+Manage a local virtualenv:
+
+```bash
+scripts/venv install
+source .venv/bin/activate
+```
+
+VS Code users can run the same workflow through `Tasks: Run Task`:
+
+```text
+venv: create
+venv: install
+venv: recreate
+venv: remove
+example: minimal turn
+test: unittest
+```
+
+See also:
+
+* [Metadata schema](docs/metadata-schema.md)
+* [Roadmap](docs/roadmap.md)
+
+---
+
 ## Privacy
 
 This project intentionally avoids persistent speaker identification.
