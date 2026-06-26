@@ -153,3 +153,7 @@ venv/
 *.egg-info/
 helper
 script
+
+# Local audio/transcript import workspace.
+import/*
+!import/.gitkeep
