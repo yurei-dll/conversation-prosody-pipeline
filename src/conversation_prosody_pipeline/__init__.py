@@ -1,5 +1,6 @@
 """Conversation prosody metadata primitives."""
 
+from conversation_prosody_pipeline.audio_file import WavInfo, ingest_wav_file, read_wav_info
 from conversation_prosody_pipeline.baseline import ProsodyBaseline
 from conversation_prosody_pipeline.extractors import (
     FeatureExtractor,
@@ -26,4 +27,7 @@ __all__ = [
     "TurnFeatures",
     "TurnMetadata",
     "TurnTiming",
+    "WavInfo",
+    "ingest_wav_file",
+    "read_wav_info",
 ]

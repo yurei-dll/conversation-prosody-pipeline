@@ -16,6 +16,7 @@ are most useful downstream.
     "duration_ms": 2220
   },
   "features": {
+    "duration_ms": 2220,
     "speech_rate_wpm": 98,
     "pause_before_ms": 860,
     "energy_rms": 0.21,
@@ -41,7 +42,8 @@ are most useful downstream.
 - `schema_version` identifies the metadata contract used by the serialized turn.
 - `timing` is optional turn timing in milliseconds when an upstream system already
   has reliable boundaries for the transcript turn.
-- `features` are direct measurements for the current turn.
+- `features` are direct measurements for the current turn, such as duration,
+  transcript-derived speech rate, and RMS energy.
 - `deltas.absolute` compares the turn against the conversation-local baseline in the
   feature's native unit.
 - `deltas.relative` compares the turn against the baseline as a fractional change.

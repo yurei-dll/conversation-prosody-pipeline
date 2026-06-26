@@ -38,6 +38,11 @@ Deepgram, Vosk, or custom integration can map its own output into `RawTurn` and
 extract `TurnFeatures`, but the pipeline itself should never know which engine
 produced the data.
 
-The core package intentionally has no audio-processing dependencies. Future
-feature extractors can live beside the core or in integration packages while the
+The core package intentionally has no external audio-processing dependencies. It
+does include a minimal standard-library WAV ingest helper for local validation:
+the caller provides the transcript, no STT is performed, and the helper computes
+only duration, RMS energy, and transcript-derived speech rate. Future feature
+extractors can live beside the core or in integration packages while the
 middleware contract remains small, testable, and engine-agnostic.
+
+See [Audio file ingest](audio-file-ingest.md) for the WAV-only milestone path.

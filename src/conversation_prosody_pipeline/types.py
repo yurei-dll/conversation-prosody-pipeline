@@ -14,6 +14,7 @@ class TurnFeatures:
     may derive these from audio, transcript timing, or speech-recognition metadata.
     """
 
+    duration_ms: float | None = None
     speech_rate_wpm: float | None = None
     pause_before_ms: float | None = None
     energy_rms: float | None = None
