@@ -165,6 +165,7 @@ test: unittest
 
 See also:
 
+* [Development guide](DEVELOPMENT.md)
 * [Metadata schema](docs/metadata-schema.md)
 * [Roadmap](docs/roadmap.md)
 
