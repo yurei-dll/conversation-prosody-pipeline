@@ -1,0 +1,63 @@
+"""Typed data structures for per-turn prosody observations."""
+
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
+from typing import Any
+
+
+@dataclass(frozen=True)
+class TurnFeatures:
+    """Measurable speech features for one conversational turn.
+
+    Values are intentionally descriptive rather than interpretive. Upstream adapters
+    may derive these from audio, transcript timing, or speech-recognition metadata.
+    """
+
+    speech_rate_wpm: float | None = None
+    pause_before_ms: float | None = None
+    energy_rms: float | None = None
+    pitch_variability_hz: float | None = None
+    hesitation_count: int | None = None
+    interruption_count: int | None = None
+
+    def as_observations(self) -> dict[str, float]:
+        """Return numeric fields that can participate in baseline comparisons."""
+
+        observations: dict[str, float] = {}
+        for key, value in asdict(self).items():
+            if value is not None:
+                observations[key] = float(value)
+        return observations
+
+
+@dataclass(frozen=True)
+class ProsodyDeltas:
+    """Per-feature movement relative to a conversation-local baseline."""
+
+    absolute: dict[str, float]
+    relative: dict[str, float]
+
+    def to_dict(self) -> dict[str, dict[str, float]]:
+        return {
+            "absolute": self.absolute,
+            "relative": self.relative,
+        }
+
+
+@dataclass(frozen=True)
+class TurnMetadata:
+    """Structured metadata passed downstream alongside a transcript turn."""
+
+    transcript: str
+    features: TurnFeatures
+    deltas: ProsodyDeltas
+    baseline_sample_count: int
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "transcript": self.transcript,
+            "features": self.features.as_observations(),
+            "deltas": self.deltas.to_dict(),
+            "baseline_sample_count": self.baseline_sample_count,
+        }
