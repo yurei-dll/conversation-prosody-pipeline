@@ -52,6 +52,30 @@
       "problemMatcher": []
     },
     {
+      "label": "build: wheel",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/venv",
+      "args": [
+        "run",
+        "python",
+        "-m",
+        "pip",
+        "wheel",
+        ".",
+        "--no-deps",
+        "--wheel-dir",
+        "dist"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "test: unittest",
       "type": "shell",
       "command": "${workspaceFolder}/scripts/venv",
