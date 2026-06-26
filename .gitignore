@@ -157,3 +157,4 @@ script
 # Local audio/transcript import workspace.
 import/*
 !import/.gitkeep
+codex_no_touchy.md
