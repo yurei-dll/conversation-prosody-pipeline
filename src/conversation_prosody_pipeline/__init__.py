@@ -2,7 +2,7 @@
 
 from conversation_prosody_pipeline.baseline import ProsodyBaseline
 from conversation_prosody_pipeline.pipeline import ProsodyPipeline
-from conversation_prosody_pipeline.types import ProsodyDeltas, TurnFeatures, TurnMetadata
+from conversation_prosody_pipeline.types import ProsodyDeltas, TurnFeatures, TurnMetadata, TurnTiming
 
 __all__ = [
     "ProsodyBaseline",
@@ -10,4 +10,5 @@ __all__ = [
     "ProsodyPipeline",
     "TurnFeatures",
     "TurnMetadata",
+    "TurnTiming",
 ]

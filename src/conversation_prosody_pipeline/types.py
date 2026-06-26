@@ -46,6 +46,22 @@ class ProsodyDeltas:
 
 
 @dataclass(frozen=True)
+class TurnTiming:
+    """Transcript turn timing in milliseconds."""
+
+    start_ms: float
+    end_ms: float
+    duration_ms: float
+
+    def to_dict(self) -> dict[str, float]:
+        return {
+            "start_ms": self.start_ms,
+            "end_ms": self.end_ms,
+            "duration_ms": self.duration_ms,
+        }
+
+
+@dataclass(frozen=True)
 class TurnMetadata:
     """Structured metadata passed downstream alongside a transcript turn."""
 
@@ -53,11 +69,17 @@ class TurnMetadata:
     features: TurnFeatures
     deltas: ProsodyDeltas
     baseline_sample_count: int
+    schema_version: str = "1.0"
+    timing: TurnTiming | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        metadata: dict[str, Any] = {
+            "schema_version": self.schema_version,
             "transcript": self.transcript,
             "features": self.features.as_observations(),
             "deltas": self.deltas.to_dict(),
             "baseline_sample_count": self.baseline_sample_count,
         }
+        if self.timing is not None:
+            metadata["timing"] = self.timing.to_dict()
+        return metadata

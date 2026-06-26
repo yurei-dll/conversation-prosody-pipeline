@@ -106,15 +106,33 @@ The language model receives both the transcript and conversational metadata.
 
 Example:
 
-```yaml
-Transcript:
-  "Yeah, that's fine."
-
-Conversation:
-  speech_rate_delta: -21%
-  pause_duration_delta: +310 ms
-  energy_delta: -15%
-  interruption_count: 0
+```json
+{
+  "schema_version": "1.0",
+  "transcript": "Yeah, that's fine.",
+  "timing": {
+    "start_ms": 840,
+    "end_ms": 2380,
+    "duration_ms": 1540
+  },
+  "features": {
+    "speech_rate_wpm": 92,
+    "pause_before_ms": 310,
+    "energy_rms": 0.18,
+    "interruption_count": 0
+  },
+  "deltas": {
+    "absolute": {
+      "speech_rate_wpm": -24,
+      "pause_before_ms": 180
+    },
+    "relative": {
+      "speech_rate_wpm": -0.21,
+      "pause_before_ms": 1.38
+    }
+  },
+  "baseline_sample_count": 4
+}
 ```
 
 The pipeline intentionally avoids prescribing an interpretation.
@@ -132,6 +150,10 @@ src/conversation_prosody_pipeline/
   pipeline.py   Turn-by-turn metadata builder
   types.py      Typed feature and metadata objects
 ```
+
+The current metadata schema includes a serialized `schema_version` and optional
+per-turn `timing` in milliseconds. The Python package has no runtime dependencies;
+audio extraction libraries are intentionally not part of this groundwork layer yet.
 
 Run the minimal example:
 
@@ -177,7 +199,8 @@ This project intentionally avoids persistent speaker identification.
 
 Conversation Prosody Pipeline analyzes **how speech changes during the current conversation**, not **who is speaking**.
 
-No voiceprints, biometric databases, or long-term speaker profiles are required.
+No emotion labels, speaker identity, persistent voiceprints, biometric databases,
+or long-term speaker profiles are required.
 
 The goal is to improve conversational context while minimizing privacy concerns.
 
