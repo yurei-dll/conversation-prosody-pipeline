@@ -89,6 +89,10 @@ scripts/venv run python -m unittest discover -s tests
 If a virtualenv cannot be created, check that your Python installation includes
 `venv` and `ensurepip`.
 
+GitHub Actions runs the test suite on supported Python versions and builds wheel
+and source distribution artifacts for inspection. Publishing to PyPI is
+intentionally not configured yet.
+
 ## Running The Example
 
 ```bash
