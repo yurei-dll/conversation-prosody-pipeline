@@ -205,6 +205,7 @@ See also:
 * [Development guide](DEVELOPMENT.md)
 * [Architecture](docs/architecture.md)
 * [Simulated audio stream ingest](docs/audio-stream-ingest.md)
+* [v0.1.0 real-media experiment lab note](docs/labnote-selected-poems-real-media.md)
 * [Metadata schema](docs/metadata-schema.md)
 * [Roadmap](docs/roadmap.md)
 
