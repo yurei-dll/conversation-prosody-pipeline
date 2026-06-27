@@ -204,6 +204,8 @@ See also:
 
 * [Development guide](DEVELOPMENT.md)
 * [Architecture](docs/architecture.md)
+* [Licensing and dependency boundaries](docs/licensing.md)
+* [Data and artifact policy](docs/data-policy.md)
 * [Prior art and research context](docs/prior-art.md)
 * [Simulated audio stream ingest](docs/audio-stream-ingest.md)
 * [v0.1.0 real-media experiment lab note](docs/labnote-selected-poems-real-media.md)
