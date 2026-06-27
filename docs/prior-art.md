@@ -224,12 +224,12 @@ The project is attempting to combine:
 5. planned experiments that measure downstream usefulness, not just feature accuracy.
 
 This review does not establish that the combination is novel, and its usefulness is
-not yet validated. The checked-in types and baseline code represent named feature
-fields and compute running-mean deltas from supplied observations; richer acoustic
-extraction and downstream value remain to be demonstrated. Running-mean deltas may
-drift, early turns have weak baselines, and RMS energy may reflect the recording
-chain more than the conversation. An LLM may also turn cautious observations back
-into unwarranted psychological claims.
+not yet validated. The current WAV file and simulated-stream adapters compute
+duration, normalized RMS energy, and transcript-derived speech rate; other schema
+fields are not yet extracted from real audio. Running-mean deltas may drift, early
+turns have weak baselines, and RMS energy may reflect the recording chain more than
+the conversation. An LLM may also turn cautious observations back into unwarranted
+psychological claims.
 
 The clearest research program is therefore comparative:
 
