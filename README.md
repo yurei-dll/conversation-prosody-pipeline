@@ -1,5 +1,7 @@
 # Conversation Prosody Pipeline
 
+[![License: MIT](https://img.shields.io/github/license/yurei-dll/conversation-prosody-pipeline)](LICENSE) [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/) [![Package version](https://img.shields.io/badge/version-0.3.0-blue)](https://github.com/yurei-dll/conversation-prosody-pipeline) [![Package](https://github.com/yurei-dll/conversation-prosody-pipeline/actions/workflows/package.yml/badge.svg)](https://github.com/yurei-dll/conversation-prosody-pipeline/actions/workflows/package.yml)
+
 > A modular middleware pipeline that enriches spoken conversations with conversational metadata before they reach a language model.
 
 ## Why?
