@@ -147,6 +147,8 @@ shape described above:
 ```text
 src/conversation_prosody_pipeline/
   baseline.py   Conversation-local running baselines
+  audio_file.py Dependency-free WAV file ingestion
+  audio_stream.py Experimental WAV-backed stream ingestion
   extractors.py Extractor interfaces and dependency-free mock extractor
   pipeline.py   Turn-by-turn metadata builder
   types.py      Typed turn, feature, and metadata objects
@@ -166,6 +168,12 @@ Run the mock extractor example:
 
 ```bash
 scripts/venv run python examples/mock_extractor.py
+```
+
+Run the simulated streaming WAV example:
+
+```bash
+scripts/venv run python examples/ingest_wav_stream.py
 ```
 
 Run tests:
@@ -196,6 +204,7 @@ See also:
 
 * [Development guide](DEVELOPMENT.md)
 * [Architecture](docs/architecture.md)
+* [Simulated audio stream ingest](docs/audio-stream-ingest.md)
 * [Metadata schema](docs/metadata-schema.md)
 * [Roadmap](docs/roadmap.md)
 
