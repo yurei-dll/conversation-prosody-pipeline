@@ -157,4 +157,7 @@ script
 # Local audio/transcript import workspace.
 import/*
 !import/.gitkeep
+
+# Local experiment media, models, and generated outputs.
+artifacts/
 codex_no_touchy.md
