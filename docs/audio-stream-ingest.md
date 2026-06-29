@@ -23,5 +23,9 @@ data with `wave`.
 Transcripts remain caller-provided. Passing a transcript at finalization time
 allows the accumulator to compute `speech_rate_wpm`; no STT is performed.
 
-Future live microphone or transport adapters can reuse the same chunk and
-accumulator shape by producing `AudioChunk` objects from their own source.
+This experiment establishes that features can be accumulated incrementally without
+requiring the complete audio in memory. The planned real-time API will replace its
+WAV-oriented chunk lifecycle with a validated, transport-neutral turn interface
+while keeping deterministic WAV input as a test and example source. See
+[Real-time application integration](realtime-application.md) for the external
+application shape and [Roadmap](roadmap.md) for the implementation milestone.

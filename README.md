@@ -210,6 +210,7 @@ See also:
 * [Data and artifact policy](docs/data-policy.md)
 * [Prior art and research context](docs/prior-art.md)
 * [Simulated audio stream ingest](docs/audio-stream-ingest.md)
+* [Real-time application integration](docs/realtime-application.md)
 * [v0.1.0 real-media experiment lab note](docs/labnote-selected-poems-real-media.md)
 * [Metadata schema](docs/metadata-schema.md)
 * [Roadmap](docs/roadmap.md)
