@@ -153,6 +153,7 @@ src/conversation_prosody_pipeline/
   audio_stream.py Experimental WAV-backed stream ingestion
   extractors.py Extractor interfaces and dependency-free mock extractor
   pipeline.py   Turn-by-turn metadata builder
+  realtime.py   Transport-neutral PCM turn ingestion and conversation sessions
   types.py      Typed turn, feature, and metadata objects
 ```
 
@@ -176,6 +177,12 @@ Run the simulated streaming WAV example:
 
 ```bash
 scripts/venv run python examples/ingest_wav_stream.py
+```
+
+Run the external-application streaming example:
+
+```bash
+scripts/venv run python examples/realtime_application.py
 ```
 
 Run tests:

@@ -14,6 +14,7 @@ from conversation_prosody_pipeline.extractors import (
     TimingExtractor,
 )
 from conversation_prosody_pipeline.pipeline import ProsodyPipeline
+from conversation_prosody_pipeline.realtime import PCMFormat, ProsodySession, StreamingTurn
 from conversation_prosody_pipeline.types import (
     ProsodyDeltas,
     RawTurn,
@@ -28,9 +29,12 @@ __all__ = [
     "ProsodyBaseline",
     "ProsodyDeltas",
     "ProsodyPipeline",
+    "ProsodySession",
+    "PCMFormat",
     "RawTurn",
     "AudioChunk",
     "StreamingFeatureAccumulator",
+    "StreamingTurn",
     "TimingExtractor",
     "TurnFeatures",
     "TurnMetadata",

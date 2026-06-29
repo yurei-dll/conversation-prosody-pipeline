@@ -52,7 +52,7 @@ CPP session. For each user turn, it:
    deltas; and
 7. gives the transcript and, when desired, the metadata to the downstream LLM.
 
-A prospective application-facing API could look like this:
+An application-facing integration can look like this:
 
 ```python
 cpp = ProsodySession()
@@ -63,14 +63,15 @@ while conversation_active:
         audio_format=PCMFormat(
             encoding="pcm_s16le",
             sample_rate=16_000,
-            channels=1,
+            channel_count=1,
         ),
     )
 
-    async for pcm_chunk in microphone_turn():
+    async for sequence, pcm_chunk in microphone_turn():
         stt.push_audio(pcm_chunk)
-        turn.push_audio(pcm_chunk)
+        turn.push_audio(pcm_chunk, sequence=sequence)
 
+    turn.end_audio()
     transcript = await stt.finalize()
     metadata = turn.finish(
         transcript=transcript.text,
@@ -83,13 +84,15 @@ while conversation_active:
     )
 ```
 
-This is a design sketch rather than the current public API. The implementation
-should remain synchronous and transport-neutral at its core; an asynchronous
-application can call it from its own capture or networking loop.
+`ProsodySession`, `PCMFormat`, and the streaming-turn methods shown above are the
+public synchronous, transport-neutral API. The surrounding asynchronous loop is an
+application sketch: an application can call the core from its own capture or
+networking loop. See `examples/realtime_application.py` for a dependency-free
+executable simulation of the same audio tee and finalization path.
 
 ## Stream Contract
 
-The initial stream contract should make the following properties explicit:
+The initial stream contract makes the following properties explicit:
 
 - The PCM encoding, sample rate, and channel count are established when the turn
   begins rather than repeated on every chunk.
@@ -97,9 +100,10 @@ The initial stream contract should make the following properties explicit:
   caller.
 - Sequence numbers or frame offsets allow gaps, duplicates, and reordered chunks
   to be detected.
-- Finalization is an explicit operation rather than a flag attached to the last
-  audio chunk.
-- Audio completion and transcript availability are separate events.
+- `end_audio()` explicitly closes PCM ingestion rather than attaching a final flag
+  to the last audio chunk.
+- Audio completion and transcript availability are separate events; `finish()` is
+  called only when both are available.
 - A turn can be finalized only once, and no more audio can be added afterward.
 - Conversation baselines are updated only by finalized turns.
 - Session lifetime and reset behavior are explicit so separate conversations do
@@ -142,8 +146,8 @@ After a turn is finalized, CPP may produce metadata shaped like:
 }
 ```
 
-`turn_id` is prospective and is not part of the current metadata schema. Its exact
-placement should be decided as part of the real-time contract.
+`turn_id` is optional for non-streaming callers and is included for streaming turns
+so an external application can correlate finalized metadata with its own events.
 
 The prompt assembler, not CPP, decides how to present these fields to the language
 model. A human-readable rendering might be:

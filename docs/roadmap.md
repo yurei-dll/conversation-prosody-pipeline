@@ -11,9 +11,9 @@
 
 ## Real-Time Turn Ingestion
 
-The next milestone is a transport-neutral API that external applications can feed
-with PCM audio as it arrives. Metadata will initially be emitted only after the
-audio turn and its caller-provided transcript are complete.
+The `dev-stream` implementation adds a transport-neutral API that external
+applications can feed with PCM audio as it arrives. Metadata is initially emitted
+only after the audio turn and its caller-provided transcript are complete.
 
 - Define an explicit PCM format containing encoding, sample rate, and channel
   count.
@@ -21,8 +21,8 @@ audio turn and its caller-provided transcript are complete.
   operations.
 - Derive duration from received PCM frames rather than caller-provided chunk
   durations.
-- Detect incomplete frames, missing or duplicated chunks, reordered chunks, and
-  format changes.
+- Reject incomplete frames, missing or duplicated sequence numbers, and reordered
+  chunks; prevent format changes by fixing the format when a turn starts.
 - Keep audio completion separate from transcript availability.
 - Finalize streaming measurements through the existing `ProsodyPipeline` and
   update conversation baselines only once per completed turn.
@@ -39,6 +39,10 @@ Turn boundaries will initially remain the responsibility of the external
 application, STT provider, or voice-activity-detection adapter. See
 [Real-time application integration](realtime-application.md) for the intended
 application shape and contract boundaries.
+
+The remaining validation step is to drive this API from a real external capture or
+STT application and use that experience to refine the contract before adding a
+network-specific adapter.
 
 ## Downstream Evaluation
 

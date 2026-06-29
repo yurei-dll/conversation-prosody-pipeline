@@ -16,16 +16,18 @@ data with `wave`.
 - `iter_wav_chunks()` reads a WAV file incrementally and yields ordered chunks
   without loading the full file at once.
 - `StreamingFeatureAccumulator` accepts chunks one at a time and accumulates
-  minimal measurable features: duration and RMS energy.
-- `ingest_wav_stream()` runs the simulated stream and returns the same
-  pipeline-native `RawTurn` and `TurnFeatures` shape used elsewhere.
+  minimal measurable features: duration and RMS energy. It remains available as a
+  low-level compatibility helper.
+- `ingest_wav_stream()` feeds WAV chunks through `ProsodySession` and the public
+  streaming-turn lifecycle, then returns the same pipeline-native `RawTurn` and
+  `TurnFeatures` shape used elsewhere.
 
 Transcripts remain caller-provided. Passing a transcript at finalization time
 allows the accumulator to compute `speech_rate_wpm`; no STT is performed.
 
 This experiment establishes that features can be accumulated incrementally without
-requiring the complete audio in memory. The planned real-time API will replace its
-WAV-oriented chunk lifecycle with a validated, transport-neutral turn interface
-while keeping deterministic WAV input as a test and example source. See
+requiring the complete audio in memory. The real-time API now provides the
+validated, transport-neutral turn interface, while deterministic WAV input remains
+a test and example source. See
 [Real-time application integration](realtime-application.md) for the external
 application shape and [Roadmap](roadmap.md) for the implementation milestone.

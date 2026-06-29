@@ -17,6 +17,7 @@ class ProsodyPipeline:
         transcript: str,
         features: TurnFeatures,
         timing: TurnTiming | None = None,
+        turn_id: str | None = None,
     ) -> TurnMetadata:
         deltas = self.baseline.compare(features)
         metadata = TurnMetadata(
@@ -25,6 +26,7 @@ class ProsodyPipeline:
             deltas=deltas,
             baseline_sample_count=self.baseline.sample_count,
             timing=timing,
+            turn_id=turn_id,
         )
         self.baseline.update(features)
         return metadata

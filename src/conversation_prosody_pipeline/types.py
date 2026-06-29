@@ -85,6 +85,7 @@ class TurnMetadata:
     baseline_sample_count: int
     schema_version: str = "1.0"
     timing: TurnTiming | None = None
+    turn_id: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         metadata: dict[str, Any] = {
@@ -96,4 +97,6 @@ class TurnMetadata:
         }
         if self.timing is not None:
             metadata["timing"] = self.timing.to_dict()
+        if self.turn_id is not None:
+            metadata["turn_id"] = self.turn_id
         return metadata

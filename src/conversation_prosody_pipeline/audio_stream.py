@@ -12,8 +12,10 @@ from conversation_prosody_pipeline.audio_file import (
     _duration_ms,
     _sample_squares,
     _speech_rate_wpm,
+    read_wav_info,
 )
-from conversation_prosody_pipeline.types import RawTurn, TurnFeatures, TurnTiming
+from conversation_prosody_pipeline.realtime import PCMFormat, ProsodySession
+from conversation_prosody_pipeline.types import RawTurn, TurnFeatures
 
 
 @dataclass(frozen=True)
@@ -149,30 +151,38 @@ def ingest_wav_stream(
     transcript: str,
     chunk_duration_ms: float = 100.0,
 ) -> tuple[RawTurn, TurnFeatures]:
-    """Simulate stream ingestion from a WAV file and return pipeline-native data."""
+    """Drive the public streaming-turn lifecycle from a deterministic WAV source."""
 
     wav_path = Path(path)
-    accumulator = StreamingFeatureAccumulator()
-    for chunk in iter_wav_chunks(wav_path, chunk_duration_ms=chunk_duration_ms):
-        accumulator.add_chunk(chunk)
-
-    features = accumulator.finalize(transcript)
-    timing = TurnTiming(
-        start_ms=0.0,
-        end_ms=features.duration_ms or 0.0,
-        duration_ms=features.duration_ms or 0.0,
+    wav_info = read_wav_info(wav_path)
+    audio_format = PCMFormat.from_wav_format(
+        sample_rate=wav_info.sample_rate,
+        sample_width=wav_info.sample_width,
+        channel_count=wav_info.channel_count,
     )
-    wav_info = accumulator.wav_info()
+    session = ProsodySession()
+    streaming_turn = session.start_turn(
+        turn_id=wav_path.name,
+        audio_format=audio_format,
+    )
+    for sequence, chunk in enumerate(
+        iter_wav_chunks(wav_path, chunk_duration_ms=chunk_duration_ms)
+    ):
+        streaming_turn.push_audio(chunk.raw_pcm, sequence=sequence)
+
+    streaming_turn.end_audio()
+    metadata = streaming_turn.finish(transcript=transcript)
+    features = metadata.features
     turn = RawTurn(
         transcript=transcript,
-        timing=timing,
+        timing=metadata.timing,
         metadata={
             "source": "wav_stream",
             "path": str(wav_path),
             "chunk_duration_ms": chunk_duration_ms,
-            "chunk_count": accumulator.chunk_count,
-            "is_complete": accumulator.is_complete,
-            "wav": wav_info.to_dict() if wav_info is not None else None,
+            "chunk_count": streaming_turn.chunk_count,
+            "is_complete": streaming_turn.is_finalized,
+            "wav": wav_info.to_dict(),
         },
     )
     return turn, features

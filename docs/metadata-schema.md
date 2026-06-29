@@ -9,6 +9,7 @@ are most useful downstream.
 ```json
 {
   "schema_version": "1.0",
+  "turn_id": "turn-17",
   "transcript": "Yeah... I'm fine.",
   "timing": {
     "start_ms": 1200,
@@ -40,6 +41,8 @@ are most useful downstream.
 ## Field Notes
 
 - `schema_version` identifies the metadata contract used by the serialized turn.
+- `turn_id` is an optional caller-provided correlation identifier. Real-time turns
+  include it; existing non-streaming callers may omit it.
 - `timing` is optional turn timing in milliseconds when an upstream system already
   has reliable boundaries for the transcript turn.
 - `features` are direct measurements for the current turn, such as duration,

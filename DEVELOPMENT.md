@@ -106,15 +106,27 @@ baseline.
 
 ```text
 src/conversation_prosody_pipeline/
-  baseline.py   Conversation-local running baselines
-  pipeline.py   Turn-by-turn metadata builder
-  types.py      Typed feature and metadata objects
+  audio_file.py   Dependency-free WAV file ingestion
+  audio_stream.py Deterministic WAV chunk source and compatibility helpers
+  baseline.py     Conversation-local running baselines
+  extractors.py   Extractor interfaces and dependency-free mock extractor
+  pipeline.py     Turn-by-turn metadata builder
+  realtime.py     Transport-neutral PCM turn ingestion and conversation sessions
+  types.py        Typed feature and metadata objects
 
 examples/
+  ingest_wav_file.py
+  ingest_wav_stream.py
   minimal_turn.py
+  mock_extractor.py
+  realtime_application.py
 
 tests/
+  test_audio_file.py
+  test_audio_stream.py
+  test_corpus_ingest.py
   test_pipeline.py
+  test_realtime.py
 ```
 
 ## Design Boundaries
