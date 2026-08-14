@@ -1,5 +1,7 @@
 # Labnote 004 experiment runner
 
+**Status:** Inference and oracle synthesis complete; blinded listener evaluation pending.
+
 This directory contains the tracked, reproducible inputs and runners for the
 same-text/different-context prosody experiment. Generated outputs belong under the
 ignored `artifacts/` directory and are not source-distribution files.
