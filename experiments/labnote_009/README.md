@@ -26,3 +26,5 @@ are excluded rather than coerced.
 
 Audio is generated as a complete utterance by Kokoro. There is no segmentation,
 splicing, pitch shifting, gain processing, time stretching, or crossfade stage.
+`prepare_review.py` refuses to package a listener bundle unless every native-stress
+trial passes the phoneme and bounded audio-integrity gates.
