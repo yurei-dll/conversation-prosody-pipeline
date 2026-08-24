@@ -16,19 +16,25 @@ from typing import Any
 
 SAMPLE_RATE = 24_000
 VOICES = ("af_heart", "am_adam")
-PITCH = 2 ** (3 / 12)  # three semitones
-GAIN = 10 ** (4 / 20)  # four decibels
+PITCH = 2 ** (1.5 / 12)
+GAIN = 10 ** (3.5 / 20)
+CROSSFADE_SECONDS = 0.015
 PROTOCOL = {
     "format": "conversation-prosody.focus-control-gate",
-    "version": 1,
+    "version": 3,
     "source": "labnote-004-oracle-synthesis",
     "selection": "two_minimum_sha256_contrastive_emphasis_pairs",
     "voices": list(VOICES),
-    "pitch_semitones": 3,
-    "gain_db": 4,
+    "pitch_semitones": 1.5,
+    "gain_db": 3.5,
+    "formant": "preserved",
+    "pitch_quality": "quality",
+    "transients": "smooth",
+    "detector": "soft",
+    "boundary_crossfade_seconds": CROSSFADE_SECONDS,
     "thresholds": {
-        "minimum_local_energy_ratio": 1.12,
-        "minimum_local_f0_ratio": 1.12,
+        "minimum_local_energy_ratio": 1.08,
+        "minimum_local_f0_ratio": 1.05,
         "minimum_relative_waveform_difference": 0.10,
         "maximum_duration_delta_ratio": 0.03,
     },
@@ -53,12 +59,16 @@ def emphasize(source: Path, target: Path, window: tuple[float, float]) -> None:
     start, end = window
     if not 0 <= start < end:
         raise ValueError("invalid focus window")
+    fade = CROSSFADE_SECONDS
+    overlap = 2 * fade
     graph = (
-        f"[0:a]atrim=0:{start},asetpts=PTS-STARTPTS[pre];"
-        f"[0:a]atrim={start}:{end},asetpts=PTS-STARTPTS,"
-        f"rubberband=pitch={PITCH}:tempo=1.0,volume={GAIN}[focus];"
-        f"[0:a]atrim=start={end},asetpts=PTS-STARTPTS[post];"
-        "[pre][focus][post]concat=n=3:v=0:a=1[out]"
+        f"[0:a]atrim=0:{start + fade},asetpts=PTS-STARTPTS[pre];"
+        f"[0:a]atrim={max(0, start - fade)}:{end + fade},asetpts=PTS-STARTPTS,"
+        f"rubberband=pitch={PITCH}:tempo=1.0:formant=preserved:pitchq=quality:"
+        f"transients=smooth:detector=soft:smoothing=on,volume={GAIN}[focus];"
+        f"[0:a]atrim=start={max(0, end - fade)},asetpts=PTS-STARTPTS[post];"
+        f"[pre][focus]acrossfade=d={overlap}:c1=qsin:c2=qsin[head];"
+        f"[head][post]acrossfade=d={overlap}:c1=qsin:c2=qsin[out]"
     )
     target.parent.mkdir(parents=True, exist_ok=True)
     run(["ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error", "-y",

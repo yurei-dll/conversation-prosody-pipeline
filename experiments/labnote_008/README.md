@@ -1,6 +1,6 @@
 # Labnote 008 audible focus-control gate
 
-**Status:** Pilot implementation ready; real-artifact gate pending.
+**Status:** v1 was audible but failed naturalness; v2 smooth-focus gate pending.
 
 Labnote 004 showed that distinct audio bytes are not evidence of a meaningful
 prosodic contrast. Its first listener slice was stopped after three blinded judgments:
@@ -10,12 +10,20 @@ This bounded follow-up tests one mechanism before spending more human-review lab
 can a compiler place clearly audible emphasis on either of two authored focus spans
 while holding sentence and voice fixed?
 
-The frozen pilot:
+The v1 pilot passed its acoustic gate, but the operator heard an unnaturally high
+pitch and a brief doubled voice at the edited boundary. No judgments were submitted.
+The likely causes were a three-semitone shift with shifted formants and hard joins.
+
+The frozen v2 pilot:
 
 - deterministically selects two authored `contrastive-emphasis` pairs;
 - evaluates both `af_heart` and `am_adam`;
 - starts each comparison from the same neutral waveform;
-- applies token-aligned pitch shift and gain only to the intended focus span; and
+- applies token-aligned +1.5-semitone, +3.5 dB emphasis with preserved formants,
+  quality pitch processing, smooth transient handling, and 15 ms boundary overlap;
+
+An initial v2 pass at +2.5 dB preserved pitch and duration but failed the frozen local
+energy threshold. v3 changes only gain to +3.5 dB; another failure ends this DSP route.
 - admits a comparison only when both directions clear energy, token-local F0,
   waveform-separation, and duration-stability gates.
 
