@@ -15,6 +15,8 @@ The experiment is split into independently resumable phases:
 3. `oracle-synthesis` renders gold IR independently of model inference.
 4. `end-to-end` renders selected model predictions after the oracle compiler passes
    calibration.
+5. `listener-review` compares intended and sibling-swapped oracle deliveries in a
+   private, blinded audio review.
 
 Run the inference phase:
 
@@ -80,3 +82,24 @@ Prepare and fingerprint Kokoro once before starting synthesis:
 This downloads the official `hexgrad/Kokoro-82M` assets as needed, generates a short
 sample with each selected voice, and records resolved package versions plus hashes of
 the cached model files.
+
+## Frozen listener slice
+
+`prepare_listener_review.py` deterministically selects one authored contrast from
+each of the eleven phenomena, includes both readings, and balances the two synthesis
+voices 6/5 across phenomena. It verifies every source clip against the synthesis
+ledger, records byte-identical intended/swapped clips as automatic ties, and collapses
+duplicate unordered audio pairs before producing a Composition Review audio-v2
+bundle. Treatment mappings live only in the owner-readable reveal key.
+
+```bash
+python experiments/labnote_004/prepare_listener_review.py \
+  --run-dir artifacts/labnote-004/oracle-synthesis \
+  --output-dir "$REVIEW_STATE_DIR" \
+  --calibration-audio artifacts/labnote-004/kokoro-preflight/af_heart.wav
+```
+
+The primary judgment is which delivery better matches the stated conversational
+context. Naturalness is an optional secondary score. The preparation command creates
+the bundle only; starting or supervising a human-review session remains a separate,
+explicit operation.
