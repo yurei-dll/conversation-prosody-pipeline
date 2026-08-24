@@ -9,13 +9,13 @@ from collections import Counter, defaultdict
 import hashlib
 import json
 from pathlib import Path
+import math
+from statistics import median
 import sys
 from typing import Any
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE.parent / "labnote_008"))
 sys.path.insert(0, str(HERE.parent / "labnote_009"))
-from run_focus_gate import median_f0, rms  # noqa: E402
 from run_native_stress import annotate_competing_focus, canonical, digest, token_map, validate_phoneme_contrast  # noqa: E402
 
 VOICES = ("af_heart", "am_adam")
@@ -23,6 +23,22 @@ PROTOCOL = {"format": "conversation-prosody.native-stress-prominence", "version"
     "voices": list(VOICES), "eligible_pairs": "both_focus_words_primary_under_plain_g2p",
     "word_gate": {"minimum_dimensions": 2, "minimum_ratio": 1.03, "minimum_any_ratio": 0.90},
     "campaign_gate": {"minimum_trials": 5, "minimum_per_voice": 2}, "post_processing": "none"}
+
+def rms(values: array) -> float:
+    return math.sqrt(sum(value * value for value in values) / max(len(values), 1))
+
+def median_f0(values: array) -> float:
+    estimates=[]
+    for start in range(0,max(0,len(values)-960+1),240):
+        frame=values[start:start+960]; mean=sum(frame)/960; centered=[v-mean for v in frame]
+        energy=sum(v*v for v in centered)
+        if energy < 1: continue
+        scores=[]
+        for lag in range(60,480):
+            scores.append(sum(centered[i]*centered[i+lag] for i in range(960-lag))/energy)
+        best=max(range(len(scores)),key=scores.__getitem__)
+        if scores[best]>=0.35: estimates.append(24000/(60+best))
+    return median(estimates) if estimates else 0.0
 
 
 def samples(value: Any) -> array:
@@ -106,4 +122,3 @@ def main():
     p=argparse.ArgumentParser(); p.add_argument("--source-run",type=Path,required=True); p.add_argument("--output-dir",type=Path,required=True); a=p.parse_args()
     execute(a.source_run.resolve(),a.output_dir.resolve())
 if __name__=="__main__": main()
-
