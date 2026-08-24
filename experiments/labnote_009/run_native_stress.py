@@ -16,7 +16,7 @@ VOICES = ("af_heart", "am_adam")
 PROTOCOL = {
     "format": "conversation-prosody.native-stress-pilot",
     "version": 1,
-    "selection": "two_minimum_sha256_contrastive_emphasis_pairs",
+    "selection": "two_minimum_sha256_pairs_after_both_focus_words_primary_g2p_gate",
     "voices": list(VOICES),
     "conditions": "intended_primary_competing_secondary",
     "misaki_annotation": "[competing_focus](-1)",
@@ -84,9 +84,21 @@ def execute(source_run: Path, output_dir: Path) -> dict[str, Any]:
     for case in corpus:
         if case["phenomenon"] == "contrastive-emphasis":
             pairs[case["pair_id"]].append(case)
-    selected = sorted(pairs, key=lambda pair_id: digest(f"labnote-009:{pair_id}"))[:2]
-    output_dir.mkdir(parents=True, exist_ok=True)
     pipeline = KPipeline(lang_code="a", repo_id="hexgrad/Kokoro-82M")
+    eligible = []
+    for pair_id, readings in pairs.items():
+        if len(readings) != 2 or len({case["target"] for case in readings}) != 1:
+            continue
+        _phonemes, tokens = pipeline.g2p(readings[0]["target"])
+        mapped = token_map(tokens)
+        focuses = [case["gold_ir"]["focus_span"].casefold() for case in readings]
+        if all(len(mapped.get(focus, [])) == 1 and "ˈ" in mapped[focus][0]
+               for focus in focuses):
+            eligible.append(pair_id)
+    if len(eligible) < 2:
+        raise ValueError("fewer than two authored pairs passed the primary-stress eligibility gate")
+    selected = sorted(eligible, key=lambda pair_id: digest(f"labnote-009:{pair_id}"))[:2]
+    output_dir.mkdir(parents=True, exist_ok=True)
     trials = []
     for pair_id in selected:
         readings = sorted(pairs[pair_id], key=lambda case: case["reading"])
@@ -156,4 +168,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
