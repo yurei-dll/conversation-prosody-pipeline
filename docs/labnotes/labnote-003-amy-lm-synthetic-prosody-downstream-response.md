@@ -3,7 +3,22 @@
 **Run date:** 2026-07-01  
 **Package:** `conversation-prosody-pipeline` 0.3.1  
 **Metadata schema:** 1.0  
-**Status:** Completed negative/inconclusive pilot
+**Status:** Completed negative/inconclusive pilot; source audio quarantined after provenance audit
+
+> **2026-08-23 provenance correction:** This experiment did not synthesize its input
+> audio. It consumed pre-generated WAVs from the named third-party dataset. A later
+> audit of every published dataset revision found no synthesis model, voice, prompt,
+> seed, generation script, license, or human-validation record. The retained run also
+> lacks a source-shard hash and immutable dataset revision. Eight current public rows
+> were transcribed as a limited integrity probe: all were closer to `rewritten_text`
+> than `original_utterance`, but one automated transcript contained a possible extra
+> interjection absent from both stored text fields. Because the current files cannot
+> be proven byte-identical to the unpinned July input, that probe does not retroactively
+> validate the original run. Treat the corpus audio as provenance-invalid: preserve
+> this negative result as history, but do not use its audio for training, validation,
+> or further scientific claims. A separately numbered rerun must generate and
+> fingerprint audio locally and pass transcript-fidelity and treatment-separation
+> gates before downstream response generation.
 
 The software run completed, but correctly matched delivery cues did not outperform
 shuffled cues under the available automatic proxies. The result is consistent with
@@ -40,7 +55,9 @@ Audio is embedded mono 24 kHz PCM WAV. The runner converts selected audio to mon
 16 kHz PCM WAV before analysis. The available parquet metadata did not state a
 license. A programmatic Hub metadata request failed because DNS was unavailable, so
 the dataset license and revision remain missing or unclear. The provenance and human
-validation status of the dataset-provided labels were not established.
+validation status of the dataset-provided labels were not established. A later audit
+established that the dataset card contains schema metadata only and does not disclose
+how the audio was synthesized.
 
 Reproducibility details:
 
@@ -58,6 +75,7 @@ Reproducibility details:
 - Ollama model: `qwen2.5:3b`, local ID `357c53fb659c`
 - Generation: temperature 0.4, seed 42, non-streaming chat completion
 - Dataset revision and source-shard hash: not available in the retained run metadata
+- Audio synthesizer, voice, conditioning, prompt, seed, and generation code: unknown
 
 The same system prompt was used for every response:
 
@@ -177,12 +195,15 @@ representation, model, and evaluation did not demonstrate correct cue use.
 - The attempted LLM judge had severe display-position bias and was discarded.
 - Human blinded ratings have not been completed.
 - Dataset license and revision were unavailable during the run.
+- The source audio has no reproducible generation provenance and is quarantined from
+  reuse; therefore even “matched” means only “same dataset row,” not a validated match
+  between label, intended delivery, and synthesized realization.
 
 ## Next steps
 
-1. Complete human ratings using the blinded file and separate answer key.
-2. Compare C directly against both B and D on empathy, naturalness, intent alignment,
-   and overinterpretation.
+1. Do not spend human-rating labor on this quarantined corpus.
+2. Recreate the bounded experiment with locally generated, fingerprinted
+   whole-utterance audio and explicit fidelity/separation gates.
 3. Use same-text/different-delivery audio so lexical content is exactly controlled.
 4. Add deliberately contrasting or anti-correlated cue bundles to increase treatment
    separation and test whether responses move in the predicted direction.
@@ -194,8 +215,9 @@ representation, model, and evaluation did not demonstrate correct cue use.
 
 ## Bottom line
 
-The run validates the five-condition experimental plumbing and shows that compact cue
-text changes generation. It does not provide evidence that the model uses correctly
+The run validates the historical five-condition plumbing and shows that compact cue
+text changes generation. Its opaque source audio prevents stronger scientific reuse.
+It does not provide evidence that the model uses correctly
 matched delivery cues more effectively than plausible shuffled cues. The current
 evidence is consistent with sensitivity to structured cue text, not demonstrated use
 of cue correctness.
