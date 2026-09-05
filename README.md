@@ -1,5 +1,11 @@
 # Conversation Prosody Pipeline
 
+> [!NOTE]
+> **Archived for organizational consolidation.** This repository's history and
+> continuing research record now live in
+> [`yurei-so/research`](https://github.com/yurei-so/research/tree/main/experiments/conversation-prosody-pipeline).
+> Existing results remain part of the record; this move does not retract them.
+
 [![License: MIT](https://img.shields.io/github/license/yurei-dll/conversation-prosody-pipeline)](LICENSE) [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/downloads/) [![Package version](https://img.shields.io/badge/version-0.3.0-blue)](https://github.com/yurei-dll/conversation-prosody-pipeline) [![Package](https://github.com/yurei-dll/conversation-prosody-pipeline/actions/workflows/package.yml/badge.svg)](https://github.com/yurei-dll/conversation-prosody-pipeline/actions/workflows/package.yml)
 
 > A modular middleware pipeline that enriches spoken conversations with conversational metadata before they reach a language model.
